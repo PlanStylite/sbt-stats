@@ -1,24 +1,25 @@
 /**
- * Copyright (c) 2013 Orr Sella
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+  * Copyright (c) 2013 Orr Sella
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
 
-package com.orrsella.sbtstats
+package sbt.plugins.sbtstats
 
 import java.io.File
-import sbt._
+
 import sbt.Keys._
+import sbt._
 
 object StatsPlugin extends Plugin {
 
@@ -31,12 +32,12 @@ object StatsPlugin extends Plugin {
   override lazy val settings = Seq(
     commands += statsCommand,
     statsAnalyzers := Seq(new FilesAnalyzer(), new LinesAnalyzer(), new CharsAnalyzer()),
-    statsProject <<= (statsProjectNoPrint, name, state) map { (res, n, s) => statsProjectTask(res, n, s.log) },
+    statsProject := statsProjectTask(statsProjectNoPrint.value, name.value, state.value.log),
     statsProjectNoPrint <<= (statsAnalyzers, sources in Compile, packageBin in Compile, state, statsEncoding, compile in Compile) map {
       (ana, src, packg, s, enc, c) => statsProjectNoPrintTask(ana, src, packg, enc, s.log)
     },
-    statsEncoding <<= scalacOptions.map{
-      _.sliding(2).foldLeft("UTF-8"){
+    statsEncoding <<= scalacOptions.map {
+      _.sliding(2).foldLeft("UTF-8") {
         case (_, List("-encoding", enc)) => enc
         case (enc, _) => enc
       }
@@ -54,10 +55,11 @@ object StatsPlugin extends Plugin {
     val projectRefs = structure.allProjectRefs
 
     val results: Seq[AnalyzerResult] = projectRefs.flatMap {
-      projectRef => EvaluateTask(structure, statsProjectNoPrint, state, projectRef) match {
-        case Some((state, Value(seq))) => seq
-        case _ => Seq()
-      }
+      projectRef =>
+        EvaluateTask(structure, statsProjectNoPrint, state, projectRef) match {
+          case Some((_, Value(seq))) => seq
+          case _ => Seq()
+        }
     }
 
     val distinctTitles = results.map(_.title).distinct
