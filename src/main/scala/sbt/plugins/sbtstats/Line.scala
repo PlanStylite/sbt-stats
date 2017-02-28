@@ -21,6 +21,6 @@ class Line(l: String) {
   val length = line.length
   val isComment = line.startsWith("//") || line.startsWith("/*") || line.startsWith("*")
   val isBracket = line == "{" || line == "}"
-  val isBlank = line.length == 0
+  val isBlank = line.isEmpty
   val isCode = !isComment && !isBlank
 }

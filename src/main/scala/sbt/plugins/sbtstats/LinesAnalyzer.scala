@@ -46,7 +46,7 @@ class LinesAnalyzerResult(
                            blankLines: Int)
   extends AnalyzerResult {
 
-  val title = "Lines"
+  val banner = "Lines"
   val metrics =
     Seq(
       new AnalyzerMetric("Total:     ", totalLines, "lines"),

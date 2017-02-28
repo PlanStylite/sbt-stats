@@ -4,9 +4,11 @@ name := "sbt-stats"
 
 organization := "com.github.hongxuchen"
 
-version := "0.0.1"
+version := "0.0.1-SNAPSHOT"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+)
 
 scalacOptions ++= Seq(
   "-language:_",

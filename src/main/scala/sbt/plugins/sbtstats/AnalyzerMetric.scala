@@ -24,7 +24,7 @@ case class AnalyzerMetric(title: String, value: Double, total: Option[Double] = 
   def this(title: String, value: Double, unit: String) = this(title, value, None, Some(unit))
 
   override def toString = (percentage, unit) match {
-    case (Some(p), Some(u)) => "%s %,.0f %s (%.1f%%)".format(title, value, u, p)
+    case (Some(p), Some(u)) => s"%s %,.0f %s (%.1f%%)".format(title, value, u, p)
     case (Some(p), None) => "%s %,.0f (%.1f%%)".format(title, value, p)
     case (None, Some(u)) => "%s %,.0f %s".format(title, value, u)
     case _ => "%s %,.0f".format(title, value)

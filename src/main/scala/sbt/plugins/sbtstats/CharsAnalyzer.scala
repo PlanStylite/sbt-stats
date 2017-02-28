@@ -37,7 +37,7 @@ class CharsAnalyzer extends Analyzer {
 
 class CharAnalyzerResult(totalChars: Int, codeChars: Int, commentChars: Int) extends AnalyzerResult {
 
-  val title = "Characters"
+  val banner = "Characters"
   val metrics =
     Seq(
       new AnalyzerMetric("Total:     ", totalChars, "chars"),

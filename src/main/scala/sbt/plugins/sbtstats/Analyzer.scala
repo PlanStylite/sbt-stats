@@ -21,5 +21,5 @@ import java.io.File
 abstract class Analyzer {
   def analyze(sources: Seq[File], packageBin: File, encoding: String): AnalyzerResult
 
-  override def toString: String = getClass.getSimpleName
+  override def toString: String = getClass.getCanonicalName
 }

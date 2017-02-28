@@ -22,6 +22,7 @@ import scala.io.Source
 
 class FilesAnalyzer extends Analyzer {
   def analyze(sources: Seq[File], packageBin: File, encoding: String) = {
+    log(s"${sources.mkString("; ")}")
     val scalaFiles = sources.count(_.getName.endsWith("scala"))
     val javaFiles = sources.count(_.getName.endsWith("java"))
     val totalSize = sources.map(_.length).foldLeft(0l)(_ + _)
@@ -44,7 +45,7 @@ class FilesAnalyzerResult(
                            avgLines: Int)
   extends AnalyzerResult {
 
-  val title = "Files"
+  val banner = "Files"
   val metrics =
     Seq(
       new AnalyzerMetric("Total:     ", totalFiles, "files"),

@@ -19,20 +19,18 @@ package sbt.plugins.sbtstats
 import scala.language.implicitConversions
 
 abstract class AnalyzerResult {
-  def title: String
+  def banner: String
 
   def metrics: Seq[AnalyzerMetric]
 
-  override def toString = title + "\n- " + metrics.mkString("\n- ") + "\n"
-
-  private implicit def anyToString(x: Any): String = x.toString
+  override def toString = s"${banner}\n- ${metrics.mkString("\n- ")}\n"
 
   def +(that: AnalyzerResult): AnalyzerResult = {
-    val combinedMetrics = this.metrics ++ that.metrics
+    val combinedMetrics = metrics ++ that.metrics
     val distinctTitles = combinedMetrics.map(_.title).distinct
     val summedMetrics = distinctTitles.map(t => combinedMetrics.filter(m => m.title == t).reduceLeft(_ + _))
-    GenericAnalyzerResult(title, summedMetrics)
+    GenericAnalyzerResult(banner, summedMetrics)
   }
 }
 
-case class GenericAnalyzerResult(title: String, metrics: Seq[AnalyzerMetric]) extends AnalyzerResult
+case class GenericAnalyzerResult(banner: String, metrics: Seq[AnalyzerMetric]) extends AnalyzerResult
